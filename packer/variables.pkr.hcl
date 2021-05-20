@@ -55,6 +55,12 @@ variable "resource_bucket_name" {
   description = "The name of the S3 resources bucket"
 }
 
+variable "resource_bucket_informix_sdk_prefix" {
+  type        = string
+  default     = "packages/informix"
+  description = "The object prefix for Informix Client SDK package within the S3 resources bucket"
+}
+
 variable "resource_bucket_c_libraries_prefix" {
   type        = string
   default     = "libraries/c/i686"

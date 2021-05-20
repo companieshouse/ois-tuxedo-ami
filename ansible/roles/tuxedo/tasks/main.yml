@@ -153,6 +153,28 @@
     recurse: yes
     owner: root
     group: root
+
+- name: Download Informix Client SDK archive
+  aws_s3:
+    bucket: "{{ resource_bucket_name }}"
+    object: "{{ resource_bucket_informix_sdk_prefix }}/informix-sdk-{{ informix_sdk_version }}.tar.gz"
+    dest: "{{ temp_dir.path }}/informix-sdk-{{ informix_sdk_version }}.tar.gz"
+    mode: get
+
+- name: Extract Download Informix Client SDK archive
+  unarchive:
+    src: "{{ temp_dir.path }}/informix-sdk-{{ informix_sdk_version }}.tar.gz"
+    dest: "{{ informix_install_directory }}"
+    remote_src: yes
+
+- name: Set ownership of Informix Client SDK installation files
+  file:
+    path: "{{ informix_install_directory }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+
 #
 # - name: Create Oracle Database installation directory
 #   file:

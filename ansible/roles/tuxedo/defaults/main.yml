@@ -39,5 +39,8 @@ system_locale: C
 tuxedo_version: "8.1"
 tuxedo_install_directory: "/opt/tuxedo/{{ tuxedo_version }}"
 
+informix_sdk_version: "410UC12"
+informix_install_directory: "/opt/informix/{{ informix_sdk_version }}"
+
 deployment_dir: deployment
 envfile_name: envfile
