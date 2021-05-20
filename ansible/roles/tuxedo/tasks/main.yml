@@ -154,6 +154,14 @@
     owner: root
     group: root
 
+- name: Create Informix Client SDK installation directory
+  file:
+    path: "{{ informix_install_directory }}"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
 - name: Download Informix Client SDK archive
   aws_s3:
     bucket: "{{ resource_bucket_name }}"
