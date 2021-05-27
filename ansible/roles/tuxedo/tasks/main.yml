@@ -183,36 +183,6 @@
     owner: root
     group: root
 
-#
-# - name: Create Oracle Database installation directory
-#   file:
-#     path: "{{ oracle_database_install_directory }}"
-#     owner: root
-#     group: root
-#     mode: '0755'
-#     state: directory
-#
-# - name: Download Oracle Database archive
-#   aws_s3:
-#     bucket: "{{ resource_bucket_name }}"
-#     object: "{{ resource_bucket_oracle_database_prefix }}/oracle-database-{{ oracle_database_version }}.tar.gz"
-#     dest: "{{ temp_dir.path }}/oracle-database-{{ oracle_database_version }}.tar.gz"
-#     mode: get
-#
-# - name: Extract Oracle Database archive
-#   unarchive:
-#     src: "{{ temp_dir.path }}/oracle-database-{{ oracle_database_version }}.tar.gz"
-#     dest: "{{ oracle_database_install_directory }}"
-#     remote_src: yes
-#
-# - name: Set ownership of Oracle Database installation files
-#   file:
-#     path: "{{ oracle_database_install_directory }}"
-#     state: directory
-#     recurse: yes
-#     owner: root
-#     group: root
-
 - name: Remove temporary directory
   file:
     path: temp_dir.path
