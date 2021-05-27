@@ -4,34 +4,6 @@
   community.general.timezone:
     name: Europe/London
 
-# - name: Find base image resource limit configs
-#   find:
-#     paths: /etc/security/limits.d
-#     patterns: "*"
-#   register: resource_limit_configs
-
-# - name: Remove base image resource limit configs
-#   file:
-#     path: "{{ item.path }}"
-#     state: absent
-#   loop: "{{ resource_limit_configs.files }}"
-#
-# - name: Set hard global resource limits
-#   pam_limits:
-#     domain: '*'
-#     limit_type: hard
-#     limit_item: "{{ item.key }}"
-#     value: "{{ item.value }}"
-#   loop: "{{ global_resource_limits.hard | dict2items }}"
-#
-# - name: Set soft global resource limits
-#   pam_limits:
-#     domain: '*'
-#     limit_type: soft
-#     limit_item: "{{ item.key }}"
-#     value: "{{ item.value }}"
-#   loop: "{{ global_resource_limits.soft | dict2items }}"
-
 - name: Format swap volume
   command: "mkswap {{ swap_volume_device_node }}"
   when: swap_volume_enabled | bool
