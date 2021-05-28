@@ -1,0 +1,9 @@
+---
+
+- hosts: tuxedo
+  become: true
+  roles:
+    - aws-nvme-device-files
+    - epel
+    - pip
+    - tuxedo

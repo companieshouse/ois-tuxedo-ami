@@ -1,0 +1,161 @@
+---
+
+- name: Set timezone to Europe/London
+  community.general.timezone:
+    name: Europe/London
+
+- name: Format swap volume
+  command: "mkswap {{ swap_volume_device_node }}"
+  when: swap_volume_enabled | bool
+
+- name: Add swap volume to filesystem table
+  mount:
+    path: swap
+    src: "{{ swap_volume_device_node }}"
+    fstype: swap
+    opts: defaults
+    state: present
+  when: swap_volume_enabled | bool
+
+- name: Install the 'Development tools' package group
+  yum:
+    name: "@Development tools"
+    state: present
+
+- name: Install i686 build-time software dependencies
+  yum:
+    name:
+      - cyrus-sasl-devel.i686
+      - expat-devel.i686
+      - glibc-devel.i686
+      - glibc-static.i686
+      - libcurl-devel.i686
+      - ncurses-devel.i686
+      - net-snmp-devel.i686
+      - openssl-devel.i686
+      - readline-devel.i686
+    state: latest
+
+- name: Install i686 run-time software dependencies
+  yum:
+    name:
+      - glibc.i686
+      - libgcc.i686
+      - libstdc++.i686
+      - openssl-libs.i686
+      - zlib.i686
+    state: latest
+
+- name: Intall additional i686 library dependencies
+  aws_s3:
+    bucket: "{{ resource_bucket_name }}"
+    object: "{{ resource_bucket_c_libraries_prefix }}/libstdc++-libc6.2-2.so.3"
+    dest: /usr/lib/libstdc++-libc6.2-2.so.3
+    mode: get
+
+- name: Set permissions for i686 library dependencies
+  file:
+    path: /usr/lib/libstdc++-libc6.2-2.so.3
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create service group
+  group:
+    name: "{{ tuxedo_service_group }}"
+    gid: "{{ tuxedo_service_group_id }}"
+    state: present
+    system: no
+
+- name: Create service users
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    groups: "{{ tuxedo_service_group }}"
+    shell: /bin/bash
+    system: no
+  loop: "{{ tuxedo_service_users }}"
+
+- name: Create .bash_profile for service users
+  template:
+    src: bash_profile.j2
+    dest: "/home/{{ item.name }}/.bash_profile"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: '0644'
+  loop: "{{ tuxedo_service_users }}"
+
+- name: Create temporary directory
+  tempfile:
+    state: directory
+  register: temp_dir
+
+- name: Create Tuxedo installation directory
+  file:
+    path: "{{ tuxedo_install_directory }}"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Download Tuxedo archive
+  aws_s3:
+    bucket: "{{ resource_bucket_name }}"
+    object: "{{ resource_bucket_tuxedo_prefix }}/tuxedo-{{ tuxedo_version }}.tar.gz"
+    dest: "{{ temp_dir.path }}/tuxedo-{{ tuxedo_version }}.tar.gz"
+    mode: get
+
+- name: Extract Tuxedo archive
+  unarchive:
+    src: "{{ temp_dir.path }}/tuxedo-{{ tuxedo_version }}.tar.gz"
+    dest: "{{ tuxedo_install_directory }}"
+    remote_src: yes
+
+- name: Download Tuxedo license
+  aws_s3:
+    bucket: "{{ resource_bucket_name }}"
+    object: "{{ resource_bucket_tuxedo_license_prefix }}/tuxedo-{{ tuxedo_version }}"
+    dest: "{{ tuxedo_install_directory }}/udataobj/lic.txt"
+    mode: get
+
+- name: Set ownership of Tuxedo installation files
+  file:
+    path: "{{ tuxedo_install_directory }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+
+- name: Create Informix Client SDK installation directory
+  file:
+    path: "{{ informix_install_directory }}"
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Download Informix Client SDK archive
+  aws_s3:
+    bucket: "{{ resource_bucket_name }}"
+    object: "{{ resource_bucket_informix_sdk_prefix }}/informix-sdk-{{ informix_sdk_version }}.tar.gz"
+    dest: "{{ temp_dir.path }}/informix-sdk-{{ informix_sdk_version }}.tar.gz"
+    mode: get
+
+- name: Extract Download Informix Client SDK archive
+  unarchive:
+    src: "{{ temp_dir.path }}/informix-sdk-{{ informix_sdk_version }}.tar.gz"
+    dest: "{{ informix_install_directory }}"
+    remote_src: yes
+
+- name: Set ownership of Informix Client SDK installation files
+  file:
+    path: "{{ informix_install_directory }}"
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+
+- name: Remove temporary directory
+  file:
+    path: temp_dir.path
+    state: absent
