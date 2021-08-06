@@ -46,7 +46,7 @@
       - zlib.i686
     state: latest
 
-- name: Intall additional i686 library dependencies
+- name: Install additional i686 library dependencies
   aws_s3:
     bucket: "{{ resource_bucket_name }}"
     object: "{{ resource_bucket_c_libraries_prefix }}/libstdc++-libc6.2-2.so.3"
