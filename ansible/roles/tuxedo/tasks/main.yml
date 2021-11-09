@@ -74,6 +74,9 @@
     groups: "{{ tuxedo_service_group }}"
     shell: /bin/bash
     system: no
+    expires: -1
+    password_expire_min: 0
+    password_expire_max: 99999
   loop: "{{ tuxedo_service_users }}"
 
 - name: Create .bash_profile for service users
