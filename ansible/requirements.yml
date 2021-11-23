@@ -9,7 +9,7 @@ roles:
     version: 3.0.0
   - src: https://github.com/geerlingguy/ansible-role-pip
     name: pip
-    version: 2.0.0
+    version: 2.1.0
 
 collections:
   - name: community.general

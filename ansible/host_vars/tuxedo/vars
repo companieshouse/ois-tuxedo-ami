@@ -1,7 +1,11 @@
 ---
 
 pip_package: python2-pip
+pip_executable: /bin/pip2
 pip_install_packages:
   - name: boto3
+    version: 1.18.15
   - name: botocore
+    version: 1.21.15
   - name: futures
+    version: 3.3.0
