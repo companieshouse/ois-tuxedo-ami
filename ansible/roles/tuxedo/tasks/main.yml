@@ -74,9 +74,10 @@
     groups: "{{ tuxedo_service_group }}"
     shell: /bin/bash
     system: no
-    expires: -1
-    password_expire_min: 0
-    password_expire_max: 99999
+  loop: "{{ tuxedo_service_users }}"
+
+- name: Disable password expiry for service users
+  command: "chage -m 0 -M 99999 -I -1 -E -1 {{ item.name }}"
   loop: "{{ tuxedo_service_users }}"
 
 - name: Create .bash_profile for service users
