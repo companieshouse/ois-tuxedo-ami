@@ -13,6 +13,8 @@ tuxedo_service_users:
     uid: "{{ tuxedo_service_user_id_minimum + (2 * tuxedo_service_user_id_increment) | int }}"
   - name: xml
     uid: "{{ tuxedo_service_user_id_minimum + (3 * tuxedo_service_user_id_increment) | int }}"
+  - name: wck
+    uid: "{{ tuxedo_service_user_id_minimum + (4 * tuxedo_service_user_id_increment) | int }}"
 
 # If locale is ever changed from 'C', a symlink with the same name should be created
 # in $TUXDIR/locale pointing at $TUXDIR/locale/C for message strings to resolve correctly
