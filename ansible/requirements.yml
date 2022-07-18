@@ -13,3 +13,4 @@ roles:
 
 collections:
   - name: community.general
+    version: 4.1.0
