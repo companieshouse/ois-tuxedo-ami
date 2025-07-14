@@ -4,9 +4,9 @@ build {
   ]
 
   provisioner "ansible" {
-    host_alias = "${var.ansible_host_alias}"
+    host_alias    = "${var.ansible_host_alias}"
     playbook_file = "${var.playbook_file_path}"
-    extra_arguments  = [
+    extra_arguments = [
       "-e", "aws_region=${var.aws_region}",
       "-e", "resource_bucket_c_libraries_prefix=${var.resource_bucket_c_libraries_prefix}",
       "-e", "resource_bucket_name=${var.resource_bucket_name}",
